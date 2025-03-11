@@ -17,16 +17,19 @@ class GildedRoseTest {
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals("foo", app.items[0].name);
+    }
+
+    @Test
     void testNormalItemExpiredQualityDecreasesByTwo() {
 
-        Item items[] = createOneItem(NORMAL_ITEM, -1, 2);
+    Item items[] = createOneItem(NORMAL_ITEM, -1, 2);
 
-        GildedRose gildedRose = new GildedRose(items);
-        gildedRose.updateQuality();
+    GildedRose gildedRose = new GildedRose(items);
+    gildedRose.updateQuality();
 
-        Item expected = new Item(NORMAL_ITEM, -2, 0);
-        assertItems(expected, gildedRose.items[0]);
-    }
+    Item expected = new Item(NORMAL_ITEM, -2, 0);
+    assertItems(expected, gildedRose.items[0]);
+}
 
     @Test
     void testAgedBrieItemExpiredQualityIncreasesByTwo() {
