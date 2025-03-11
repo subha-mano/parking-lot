@@ -3,6 +3,7 @@ package ai.sahaj;
 public class Item {
 
     public static final int MINIMUM_THRESHOLD = 0;
+    public static final int MAXIMUM_THRESHOLD = 50;
     public String name;
 
     public int sellIn;
@@ -22,5 +23,9 @@ public class Item {
 
     public boolean isQualityGreaterThanMinimumThreshold() {
         return this.quality > MINIMUM_THRESHOLD;
+    }
+
+    public boolean isQualityLessThanMaximumThreshold() {
+        return this.quality < MAXIMUM_THRESHOLD;
     }
 }

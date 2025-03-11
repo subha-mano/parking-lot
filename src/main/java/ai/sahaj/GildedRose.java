@@ -25,18 +25,18 @@ class GildedRose {
                 }
             }
         } else {
-            if (item.quality < 50) {
+            if (item.isQualityLessThanMaximumThreshold()) {
                 item.quality = item.quality + 1;
 
                 if (item.name.equals(BACKSTAGE_PASSES)) {
                     if (item.sellIn < 11) {
-                        if (item.quality < 50) {
+                        if (item.isQualityLessThanMaximumThreshold()) {
                             item.quality = item.quality + 1;
                         }
                     }
 
                     if (item.sellIn < 6) {
-                        if (item.quality < 50) {
+                        if (item.isQualityLessThanMaximumThreshold()) {
                             item.quality = item.quality + 1;
                         }
                     }
@@ -60,7 +60,7 @@ class GildedRose {
                     item.quality = 0;
                 }
             } else {
-                if (item.quality < 50) {
+                if (item.isQualityLessThanMaximumThreshold()) {
                     item.quality = item.quality + 1;
                 }
             }

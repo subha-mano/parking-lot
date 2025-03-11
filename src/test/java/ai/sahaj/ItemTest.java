@@ -25,4 +25,24 @@ class ItemTest {
 
         assertFalse(item.isQualityGreaterThanMinimumThreshold());
     }
+    @Test
+    void shouldReturnTrueIfQualityIsLessThanMaximumThreshold() {
+        Item item = new Item("item", 0, 49);
+
+        assertTrue(item.isQualityLessThanMaximumThreshold());
+    }
+
+    @Test
+    void shouldReturnFalseIfQualityIsGreaterThanMaximumThreshold() {
+        Item item = new Item("item", 0, 51);
+
+        assertFalse(item.isQualityLessThanMaximumThreshold());
+    }
+
+    @Test
+    void shouldReturnFalseIfQualityIsEqualToMaximumThreshold() {
+        Item item = new Item("item", 0, 50);
+
+        assertFalse(item.isQualityLessThanMaximumThreshold());
+    }
 }
