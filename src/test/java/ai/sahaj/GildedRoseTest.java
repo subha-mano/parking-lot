@@ -1,5 +1,6 @@
 package ai.sahaj;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ class GildedRoseTest {
         Item[] items = new Item[]{new Item("foo", 0, 0)};
         GildedRose app = new GildedRose(items);
         app.updateQuality();
-        assertEquals("fixme", app.items[0].name);
+        assertEquals("foo", app.items[0].name);
     }
 
     @Nested
@@ -66,4 +67,43 @@ class GildedRoseTest {
         }
     }
 
+
+    private static GildedRose getGildedRoseForNormalItem() {
+        return new GildedRose(new Item[]{
+                new Item("Normal Item1", 5, 10)
+        });
+    }
+
+    private static GildedRose getGildedRoseForAgedBrie() {
+        return new GildedRose(new Item[]{
+                new Item("Aged Brie", 5, 10)
+        });
+    }
+
+    @Test
+    void shouldDecrementQualityBy1ForNormalItem() {
+        GildedRose gildedRose = getGildedRoseForNormalItem();
+
+        gildedRose.updateQuality();
+
+        Assertions.assertEquals(9, gildedRose.items[0].quality);
+    }
+
+    @Test
+    void shouldDecSellInBy1ForAnyItem() {
+        GildedRose gildedRose = getGildedRoseForNormalItem();
+
+        gildedRose.updateQuality();
+
+        Assertions.assertEquals(4, gildedRose.items[0].sellIn);
+    }
+
+    @Test
+    void shouldIncreaseQualityBy1ForAgedBrie() {
+        GildedRose agedBrie = getGildedRoseForAgedBrie();
+
+        agedBrie.updateQuality();
+
+        Assertions.assertEquals(11, agedBrie.items[0].quality);
+    }
 }
