@@ -3,10 +3,13 @@ package ai.sahaj;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GildedRoseTest {
+    public static final String NORMAL_ITEM = "Normal";
+    public static final String AGED_BRIE = "Aged Brie";
+    public static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
 
     @Test
     void foo() {
@@ -14,6 +17,51 @@ class GildedRoseTest {
         GildedRose app = new GildedRose(items);
         app.updateQuality();
         assertEquals("foo", app.items[0].name);
+    void testNormalItemExpiredQualityDecreasesByTwo() {
+
+        Item items[] = createOneItem(NORMAL_ITEM, -1, 2);
+
+        GildedRose gildedRose = new GildedRose(items);
+        gildedRose.updateQuality();
+
+        Item expected = new Item(NORMAL_ITEM, -2, 0);
+        assertItems(expected, gildedRose.items[0]);
+    }
+
+    @Test
+    void testAgedBrieItemExpiredQualityIncreasesByTwo() {
+        Item items[] = createOneItem(AGED_BRIE, -1, 2);
+
+        GildedRose gildedRose = new GildedRose(items);
+        gildedRose.updateQuality();
+
+        Item expected = new Item(AGED_BRIE, -2, 4);
+        assertItems(expected, gildedRose.items[0]);
+    }
+
+    @Test
+    void testSulfurasItemExpiredQualityRemainsSame() {
+        Item items[] = createOneItem(SULFURAS_HAND_OF_RAGNAROS, -1, 80);
+
+        GildedRose gildedRose = new GildedRose(items);
+        gildedRose.updateQuality();
+
+        Item expected = new Item(SULFURAS_HAND_OF_RAGNAROS, -1, 80);
+        assertItems(expected, gildedRose.items[0]);
+    }
+
+    private static Item[] createOneItem(String normalItem, int sellIn, int quality) {
+        Item item = new Item(normalItem, sellIn, quality);
+        Item[] items = {item};
+
+        return items;
+
+    }
+
+    private static void assertItems(Item expected, Item actual) {
+        assertEquals(expected.name, actual.name);
+        assertEquals(expected.sellIn, actual.sellIn);
+        assertEquals(expected.quality, actual.quality);
     }
 
     @Nested
