@@ -28,4 +28,12 @@ public class Item {
     public boolean isQualityLessThanMaximumThreshold() {
         return this.quality < MAXIMUM_THRESHOLD;
     }
+
+    public void decreaseQuality(int factor) {
+        this.quality -= factor;
+    }
+
+    public int getQuality() {
+        return quality;
+    }
 }

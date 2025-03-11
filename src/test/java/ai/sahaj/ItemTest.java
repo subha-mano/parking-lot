@@ -45,4 +45,13 @@ class ItemTest {
 
         assertFalse(item.isQualityLessThanMaximumThreshold());
     }
+
+    @Test
+    void shouldDecreaseQualityByGivenFactor() {
+        Item item = new Item("item", 0, 10);
+
+        item.decreaseQuality(5);
+
+        assertEquals(5, item.getQuality());
+    }
 }

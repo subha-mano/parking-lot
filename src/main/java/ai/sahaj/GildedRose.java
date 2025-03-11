@@ -21,7 +21,7 @@ class GildedRose {
                 && !item.name.equals(BACKSTAGE_PASSES)) {
             if (item.isQualityGreaterThanMinimumThreshold()) {
                 if (!item.name.equals(SULFURAS)) {
-                    item.quality = item.quality - 1;
+                    item.decreaseQuality(1);
                 }
             }
         } else {
@@ -53,7 +53,7 @@ class GildedRose {
                 if (!item.name.equals(BACKSTAGE_PASSES)) {
                     if (item.isQualityGreaterThanMinimumThreshold()) {
                         if (!item.name.equals(SULFURAS)) {
-                            item.quality = item.quality - 1;
+                            item.decreaseQuality(1);
                         }
                     }
                 } else {
