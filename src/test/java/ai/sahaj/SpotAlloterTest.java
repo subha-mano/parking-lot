@@ -2,38 +2,39 @@ package ai.sahaj;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class ParkingLotTest {
+class SpotAlloterTest {
     @Test
     void shouldNotAssignSpotToAVehicleIfNoParkingSpots() {
-        ParkingLot parkingLot = new ParkingLot(0);
+        SpotAlloter spotAlloter = new SpotAlloter(0);
         Vehicle vehicle = new Vehicle();
 
-        assertNull(parkingLot.allot(vehicle));
+        assertNull(spotAlloter.allot(vehicle));
     }
 
     @Test
     void shouldLinkSpotToAVehicleToPark() {
-        ParkingLot parkingLot = new ParkingLot(2);
+        SpotAlloter spotAlloter = new SpotAlloter(2);
         Vehicle vehicle = new Vehicle();
 
-        VehicleSpot vehicleSpot = parkingLot.allot(vehicle);
+        VehicleSpot vehicleSpot = spotAlloter.allot(vehicle);
 
         assertEquals(vehicleSpot.vehicle, vehicle);
     }
 
     @Test
     void shouldNotAssignSpotToAVehicleIfFull() {
-        ParkingLot parkingLot = new ParkingLot(1);
+        SpotAlloter spotAlloter = new SpotAlloter(1);
         Vehicle vehicle = new Vehicle();
         Vehicle anotherVehicle = new Vehicle();
 
-        VehicleSpot vehicleSpot1 = parkingLot.allot(vehicle);
-        VehicleSpot vehicleSpot2 = parkingLot.allot(anotherVehicle);
+        VehicleSpot vehicleSpot1 = spotAlloter.allot(vehicle);
+        VehicleSpot vehicleSpot2 = spotAlloter.allot(anotherVehicle);
 
         assertNotNull(vehicleSpot1.vehicle);
         assertNull(vehicleSpot2);
     }
-
 }

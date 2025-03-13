@@ -18,6 +18,6 @@ class VehicleSpotTest {
 
         vehicleSpot.park(new Vehicle());
 
-        assertFalse(vehicleSpot.isOccupied());
+        assertTrue(vehicleSpot.isOccupied());
     }
 }
