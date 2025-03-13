@@ -13,7 +13,7 @@ public class SpotAlloter {
     private void initialiseBikeSpots(int noOfBikeSpots) {
         this.bikeSpots = new VehicleSpot[noOfBikeSpots];
         IntStream.range(0, noOfBikeSpots)
-                .forEach(i -> this.bikeSpots[i] = new VehicleSpot());
+                .forEach(i -> this.bikeSpots[i] = new VehicleSpot("%d".formatted(i + 1)));
     }
 
     public VehicleSpot getFreeSpot() {

@@ -18,9 +18,9 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(2);
         Vehicle vehicle = new Vehicle();
 
-        VehicleSpot vehicleSpot = parkingLot.allot(vehicle);
+        ParkingTicket parkingTicket= parkingLot.allot(vehicle);
 
-        assertEquals(vehicleSpot.vehicle, vehicle);
+        assertEquals(parkingTicket.vehicle(), vehicle);
     }
 
     @Test
@@ -29,11 +29,11 @@ class ParkingLotTest {
         Vehicle vehicle = new Vehicle();
         Vehicle anotherVehicle = new Vehicle();
 
-        VehicleSpot vehicleSpot1 = parkingLot.allot(vehicle);
-        VehicleSpot vehicleSpot2 = parkingLot.allot(anotherVehicle);
+        ParkingTicket parkingTicket1 = parkingLot.allot(vehicle);
+        ParkingTicket parkingTicket2 = parkingLot.allot(anotherVehicle);
 
-        assertNotNull(vehicleSpot1.vehicle);
-        assertNull(vehicleSpot2);
+        assertNotNull(parkingTicket1.vehicle());
+        assertNull(parkingTicket2);
     }
 
 }

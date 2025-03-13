@@ -7,7 +7,10 @@ public class ParkingLot {
         spotAlloter = new SpotAlloter(noOfBikeSpots);
     }
 
-    public VehicleSpot allot(Vehicle vehicle) {
-       return this.spotAlloter.allot(vehicle);
+    public ParkingTicket allot(Vehicle vehicle) {
+        VehicleSpot vehicleSpot = this.spotAlloter.allot(vehicle);
+        if(vehicleSpot == null) return null;
+
+        return new ParkingTicket(vehicleSpot);
     }
 }
