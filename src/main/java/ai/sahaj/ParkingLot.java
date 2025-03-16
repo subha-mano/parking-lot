@@ -4,7 +4,7 @@ public class ParkingLot {
     final SpotAlloter spotAlloter;
 
     public ParkingLot(int noOfBikeSpots) {
-        spotAlloter = new SpotAlloter(noOfBikeSpots);
+        spotAlloter = new SpotAlloter(noOfBikeSpots, VehicleType.BIKE);
     }
 
     public ParkingTicket allot(Vehicle vehicle) {

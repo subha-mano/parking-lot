@@ -16,7 +16,7 @@ class VehicleSpotTest {
     void shouldReturnFalseIfNotOccupied() {
         VehicleSpot vehicleSpot = new VehicleSpot("1");
 
-        vehicleSpot.park(new Vehicle());
+        vehicleSpot.park(new Vehicle(VehicleType.BIKE));
 
         assertTrue(vehicleSpot.isOccupied());
     }

@@ -4,26 +4,32 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class SpotAlloter {
-    private VehicleSpot[] bikeSpots;
+    private final VehicleType vehicleType;
+    private VehicleSpot[] vehicleSpots;
 
-    public SpotAlloter(int noOfBikeSpots) {
-        initialiseBikeSpots(noOfBikeSpots);
+    public SpotAlloter(int noOfSpots, VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
+        initialiseSpots(noOfSpots);
+
     }
 
-    private void initialiseBikeSpots(int noOfBikeSpots) {
-        this.bikeSpots = new VehicleSpot[noOfBikeSpots];
+    private void initialiseSpots(int noOfBikeSpots) {
+        this.vehicleSpots = new VehicleSpot[noOfBikeSpots];
         IntStream.range(0, noOfBikeSpots)
-                .forEach(i -> this.bikeSpots[i] = new VehicleSpot("%d".formatted(i + 1)));
+                .forEach(i -> this.vehicleSpots[i] = new VehicleSpot("%d".formatted(i + 1)));
     }
 
-    public VehicleSpot getFreeSpot() {
-        return Arrays.stream(this.bikeSpots)
+    private VehicleSpot getFreeSpot() {
+        return Arrays.stream(this.vehicleSpots)
                 .filter(vehicleSpot -> !vehicleSpot.isOccupied())
                 .findFirst()
                 .orElse(null);
     }
 
     public VehicleSpot allot(Vehicle vehicle) {
+        if(!vehicle.getVehicleType().equals(this.vehicleType)) {
+            return null;
+        }
         VehicleSpot vehicleSpot = this.getFreeSpot();
         if(vehicleSpot != null)
             vehicleSpot.park(vehicle);
