@@ -1,11 +1,29 @@
 package ai.sahaj;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import java.time.Instant;
 
 import static ai.sahaj.VehicleType.BIKE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
 
 class ParkingLotTest {
+    MockedStatic<Instant> mockedInstant;
+
+    @BeforeEach
+    void setup() {
+        mockedInstant = mockStatic(Instant.class);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedInstant.close();
+    }
+
     private static Vehicle getCar() {
         return new Vehicle(VehicleType.CAR);
     }
@@ -30,6 +48,20 @@ class ParkingLotTest {
         ParkingTicket parkingTicket= parkingLot.park(vehicle);
 
         assertEquals(vehicle, parkingTicket.vehicle());
+    }
+
+    @Test
+    void shouldCaptureStartTimeWhenAVehicleIsParked() {
+        String mockTime = "2020-01-01T10:10:10Z";
+        Instant nowInstant = Instant.parse(mockTime);
+        mockedInstant.when(Instant::now).thenReturn(nowInstant);
+
+        ParkingLot parkingLot = new ParkingLot(2, 0);
+        Vehicle vehicle = getBike();
+
+        ParkingTicket parkingTicket = parkingLot.park(vehicle);
+
+        assertEquals(nowInstant, parkingTicket.startTime());
     }
 
     @Test
