@@ -1,13 +1,17 @@
 package ai.sahaj;
 
+import ai.sahaj.feeModel.FeeModel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class Venue {
     private final List<VehicleSpot> vehicleSpots;
+    private final FeeModel feeModel;
 
-    public Venue() {
+    public Venue(FeeModel feeModel) {
+        this.feeModel = feeModel;
         this.vehicleSpots = new ArrayList<>();
     }
 
@@ -23,5 +27,9 @@ public class Venue {
                         && !vehicleSpot.isOccupied())
                 .findFirst()
                 .orElse(null);
+    }
+
+    public FeeModel feeModel() {
+        return this.feeModel;
     }
 }

@@ -6,18 +6,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+import java.time.Duration;
 import java.time.Instant;
 
 import static ai.sahaj.VehicleType.BIKE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
     MockedStatic<Instant> mockedInstant;
 
     @BeforeEach
     void setup() {
-        mockedInstant = mockStatic(Instant.class);
+        mockedInstant = mockStatic(Instant.class, CALLS_REAL_METHODS);
     }
 
     @AfterEach
@@ -137,13 +139,15 @@ class ParkingLotTest {
 
         assertNotNull(parkingTicket2);
     }
+
     @Nested
-    class MallFeesModel {
+    class MallFlatFeeModelTest {
+
         @Test
-        void shouldCalculatePerHourFlatFeesForBike() {
+        void shouldCalculatePerHourFlatFeesForBikeWhenHoursIsExact() {
             Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
             Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
-            mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
+            when(Instant.now()).thenReturn(startInstant, endInstant);
 
             ParkingLot parkingLot = new ParkingLot(2, 0);
             Vehicle vehicle = getBike();
@@ -152,6 +156,36 @@ class ParkingLotTest {
             Receipt receipt = parkingLot.unpark(parkingTicket);
 
             assertEquals(20.0, receipt.fees);
+        }
+
+        @Test
+        void shouldCalculatePerHourFlatFeesForBikeWhenHourIsOneMinMore() {
+            Instant startInstant = Instant.parse("2020-01-01T08:10:10Z");
+            Instant endInstant = Instant.parse("2020-01-01T11:11:10Z");
+            when(Instant.now()).thenReturn(startInstant, endInstant);
+
+            ParkingLot parkingLot = new ParkingLot(2, 0);
+            Vehicle vehicle = getBike();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(40.0, receipt.fees);
+        }
+
+        @Test
+        void shouldCalculatePerHourFlatFeesForBikeWhenHourIsOneMinLess() {
+            Instant startInstant = Instant.parse("2020-01-01T06:10:10Z");
+            Instant endInstant = Instant.parse("2020-01-01T11:09:10Z");
+            when(Instant.now()).thenReturn(startInstant, endInstant);
+
+            ParkingLot parkingLot = new ParkingLot(2, 0);
+            Vehicle vehicle = getBike();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(50.0, receipt.fees);
         }
     }
 }

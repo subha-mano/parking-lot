@@ -1,5 +1,6 @@
 package ai.sahaj;
 
+import ai.sahaj.feeModel.FeeModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +12,7 @@ class ParkingSpotsTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfNoParkingSpots() {
-        Venue venue = new Venue();
+        Venue venue = new Venue(new FeeModel());
         Vehicle vehicle = getBike();
 
         assertNull(venue.getFreeSpot(vehicle));
@@ -19,7 +20,7 @@ class ParkingSpotsTest {
 
     @Test
     void shouldGetSpotForAVehicleToPark() {
-        Venue venue = new Venue();
+        Venue venue = new Venue(new FeeModel());
         venue.add(VehicleType.BIKE, 2);
         Vehicle vehicle = getBike();
 
@@ -30,7 +31,7 @@ class ParkingSpotsTest {
 
     @Test
     void shouldNotGetSpotIfFull() {
-        Venue venue = new Venue();
+        Venue venue = new Venue(new FeeModel());
         venue.add(VehicleType.BIKE, 1);
         Vehicle vehicle = getBike();
         Vehicle anotherVehicle = getBike();
@@ -45,7 +46,7 @@ class ParkingSpotsTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfSpotIsNotOfTheSameType() {
-        Venue venue = new Venue();
+        Venue venue = new Venue(new FeeModel());
         venue.add(VehicleType.CAR, 1);
         Vehicle vehicle = getBike();
 

@@ -1,10 +1,12 @@
 package ai.sahaj;
 
+import ai.sahaj.feeModel.FeeModel;
+
 public class ParkingLot {
     private final Venue venue;
 
     public ParkingLot(int noOfBikeSpots, int noOfCarSpots) {
-        this.venue = new Venue();
+        this.venue = new Venue(new FeeModel());
         venue.add(VehicleType.BIKE, noOfBikeSpots);
         venue.add(VehicleType.CAR, noOfCarSpots);
     }
@@ -18,6 +20,6 @@ public class ParkingLot {
 
     public Receipt unpark(ParkingTicket parkingTicket) {
         parkingTicket.vehicleSpot().unpark();
-        return new Receipt(parkingTicket);
+        return new Receipt(parkingTicket, this.venue.feeModel());
     }
 }
