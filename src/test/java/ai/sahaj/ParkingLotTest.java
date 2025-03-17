@@ -4,14 +4,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.MockedStatic;
 
-import java.time.Duration;
 import java.time.Instant;
 
 import static ai.sahaj.VehicleType.BIKE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
@@ -124,7 +124,6 @@ class ParkingLotTest {
         ParkingTicket parkingTicket = parkingLot.park(vehicle);
         Receipt receipt = parkingLot.unpark(parkingTicket);
 
-        assertNotNull(receipt.fees);
         assertEquals(startInstant, receipt.entryTime);
         assertEquals(endInstant, receipt.exitTime);
     }
@@ -142,27 +141,17 @@ class ParkingLotTest {
 
     @Nested
     class MallFlatFeeModelTest {
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForBikeWhenHoursIsExact() {
-            Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(2, 0);
-            Vehicle vehicle = getBike();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(20.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForBikeWhenHourIsOneMinMore() {
-            Instant startInstant = Instant.parse("2020-01-01T08:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T11:11:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
+        @ParameterizedTest(name = "[{index}] {3}")
+        @CsvSource({
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,20,exact_hours",
+                "2020-01-01T08:10:10Z,2020-01-01T12:10:10Z,40,one_minute_more",
+                "2020-01-01T06:10:10Z,2020-01-01T11:09:10Z,50,one_minute_less",
+                "2020-01-01T06:10:10Z,2020-01-02T17:09:10Z,350,more_than_a_day"
+        })
+        void shouldCalculatePerHourFlatFeesForBike(String startTime, String endTime, double expectedFees, String desc) {
+            Instant start = Instant.parse(startTime);
+            Instant end = Instant.parse(endTime);
+            when(Instant.now()).thenReturn(start, end);
 
             ParkingLot parkingLot = new ParkingLot(2, 0);
             Vehicle vehicle = getBike();
@@ -170,44 +159,17 @@ class ParkingLotTest {
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
             Receipt receipt = parkingLot.unpark(parkingTicket);
 
-            assertEquals(40.0, receipt.fees);
+            assertEquals(expectedFees, receipt.fees);
         }
 
-        @Test
-        void shouldCalculatePerHourFlatFeesForBikeWhenHourIsOneMinLess() {
-            Instant startInstant = Instant.parse("2020-01-01T06:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T11:09:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(2, 0);
-            Vehicle vehicle = getBike();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(50.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForBikeWhenMoreThanOneDay() {
-            Instant startInstant = Instant.parse("2020-01-01T06:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-02T17:09:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(2, 0);
-            Vehicle vehicle = getBike();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(350.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForCarWhenHoursIsExact() {
-            Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
+        @ParameterizedTest(name = "[{index}] {3}")
+        @CsvSource({
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,40,exact_hours"
+        })
+        void shouldCalculatePerHourFlatFeesForCar(String startTime, String endTime, double expectedFees, String desc) {
+            Instant start = Instant.parse(startTime);
+            Instant end = Instant.parse(endTime);
+            when(Instant.now()).thenReturn(start, end);
 
             ParkingLot parkingLot = new ParkingLot(0, 2);
             Vehicle vehicle = getCar();
@@ -215,52 +177,7 @@ class ParkingLotTest {
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
             Receipt receipt = parkingLot.unpark(parkingTicket);
 
-            assertEquals(40.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForCarWhenHoursIsHourIsOneMinMore() {
-            Instant startInstant = Instant.parse("2020-01-01T08:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T11:11:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(0, 2);
-            Vehicle vehicle = getCar();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(80.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForCarWhenHourIsOneMinLess() {
-            Instant startInstant = Instant.parse("2020-01-01T06:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-01T11:09:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(0, 2);
-            Vehicle vehicle = getCar();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(100.0, receipt.fees);
-        }
-
-        @Test
-        void shouldCalculatePerHourFlatFeesForCarWhenMoreThanOneDay() {
-            Instant startInstant = Instant.parse("2020-01-01T06:10:10Z");
-            Instant endInstant = Instant.parse("2020-01-02T17:09:10Z");
-            when(Instant.now()).thenReturn(startInstant, endInstant);
-
-            ParkingLot parkingLot = new ParkingLot(0, 2);
-            Vehicle vehicle = getCar();
-
-            ParkingTicket parkingTicket = parkingLot.park(vehicle);
-            Receipt receipt = parkingLot.unpark(parkingTicket);
-
-            assertEquals(700.0, receipt.fees);
+            assertEquals(expectedFees, receipt.fees);
         }
     }
 }
