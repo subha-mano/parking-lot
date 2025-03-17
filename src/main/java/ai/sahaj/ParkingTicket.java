@@ -18,4 +18,8 @@ public class ParkingTicket {
     public Instant startTime() {
         return this.startTime;
     }
+
+    public VehicleType vehicleType() {
+        return this.vehicleSpot.vehicleType();
+    }
 }
