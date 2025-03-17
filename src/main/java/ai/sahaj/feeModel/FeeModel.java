@@ -1,7 +1,9 @@
 package ai.sahaj.feeModel;
 
+import ai.sahaj.VehicleType;
+
 public class FeeModel {
-    public double fees(long hours) {
-        return hours * 10.0;
+    public double fees(VehicleType vehicleType, long hours) {
+        return hours * vehicleType.rate;
     }
 }

@@ -1,6 +1,11 @@
 package ai.sahaj;
 
 public enum VehicleType {
-    BIKE,
-    CAR
+    BIKE(10),
+    CAR(20);
+    public final long rate;
+
+    VehicleType(long rate) {
+        this.rate = rate;
+    }
 }
