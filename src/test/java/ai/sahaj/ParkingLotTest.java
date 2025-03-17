@@ -19,7 +19,7 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(0, 0);
         Vehicle vehicle = getBike();
 
-        assertNull(parkingLot.allot(vehicle));
+        assertNull(parkingLot.park(vehicle));
     }
 
     @Test
@@ -27,7 +27,7 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(2, 0);
         Vehicle vehicle = getBike();
 
-        ParkingTicket parkingTicket= parkingLot.allot(vehicle);
+        ParkingTicket parkingTicket= parkingLot.park(vehicle);
 
         assertEquals(vehicle, parkingTicket.vehicle());
     }
@@ -37,7 +37,7 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(2, 0);
         Vehicle vehicle = getBike();
 
-        ParkingTicket parkingTicket= parkingLot.allot(vehicle);
+        ParkingTicket parkingTicket= parkingLot.park(vehicle);
 
         assertEquals(vehicle.getVehicleType(), parkingTicket.vehicleType());
     }
@@ -48,8 +48,8 @@ class ParkingLotTest {
         Vehicle vehicle = getBike();
         Vehicle anotherVehicle = getBike();
 
-        ParkingTicket parkingTicket1 = parkingLot.allot(vehicle);
-        ParkingTicket parkingTicket2 = parkingLot.allot(anotherVehicle);
+        ParkingTicket parkingTicket1 = parkingLot.park(vehicle);
+        ParkingTicket parkingTicket2 = parkingLot.park(anotherVehicle);
 
         assertNotNull(parkingTicket1.vehicle());
         assertNull(parkingTicket2);
@@ -60,7 +60,7 @@ class ParkingLotTest {
         ParkingLot parkingLot = new ParkingLot(1, 0);
         Vehicle vehicle = getCar();
 
-        ParkingTicket parkingTicket = parkingLot.allot(vehicle);
+        ParkingTicket parkingTicket = parkingLot.park(vehicle);
 
         assertNull(parkingTicket);
     }
@@ -71,8 +71,8 @@ class ParkingLotTest {
         Vehicle car = getCar();
         Vehicle bike = getBike();
 
-        ParkingTicket parkingTicketForCar = parkingLot.allot(car);
-        ParkingTicket parkingTicketForBike = parkingLot.allot(bike);
+        ParkingTicket parkingTicketForCar = parkingLot.park(car);
+        ParkingTicket parkingTicketForBike = parkingLot.park(bike);
 
         assertNotNull(parkingTicketForCar);
         assertNotNull(parkingTicketForBike);

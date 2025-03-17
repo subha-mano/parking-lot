@@ -9,10 +9,10 @@ public class ParkingLot {
         parkingSpots.add(VehicleType.CAR, noOfCarSpots);
     }
 
-    public ParkingTicket allot(Vehicle vehicle) {
-        VehicleSpot vehicleSpot = parkingSpots.allot(vehicle);
+    public ParkingTicket park(Vehicle vehicle) {
+        VehicleSpot vehicleSpot = parkingSpots.getFreeSpot(vehicle);
         if(vehicleSpot == null) return null;
-
+        vehicleSpot.park(vehicle);
         return new ParkingTicket(vehicleSpot);
     }
 }

@@ -14,29 +14,30 @@ class ParkingSpotsTest {
         ParkingSpots parkingSpots = new ParkingSpots();
         Vehicle vehicle = getBike();
 
-        assertNull(parkingSpots.allot(vehicle));
+        assertNull(parkingSpots.getFreeSpot(vehicle));
     }
 
     @Test
-    void shouldLinkSpotToAVehicleToPark() {
+    void shouldGetSpotForAVehicleToPark() {
         ParkingSpots parkingSpots = new ParkingSpots();
         parkingSpots.add(VehicleType.BIKE, 2);
         Vehicle vehicle = getBike();
 
-        VehicleSpot vehicleSpot = parkingSpots.allot(vehicle);
+        VehicleSpot vehicleSpot = parkingSpots.getFreeSpot(vehicle);
 
-        assertEquals(vehicleSpot.vehicle, vehicle);
+        assertNotNull(vehicleSpot);
     }
 
     @Test
-    void shouldNotAssignSpotToAVehicleIfFull() {
+    void shouldNotGetSpotIfFull() {
         ParkingSpots parkingSpots = new ParkingSpots();
         parkingSpots.add(VehicleType.BIKE, 1);
         Vehicle vehicle = getBike();
         Vehicle anotherVehicle = getBike();
 
-        VehicleSpot vehicleSpot1 = parkingSpots.allot(vehicle);
-        VehicleSpot vehicleSpot2 = parkingSpots.allot(anotherVehicle);
+        VehicleSpot vehicleSpot1 = parkingSpots.getFreeSpot(vehicle);
+        vehicleSpot1.park(vehicle);
+        VehicleSpot vehicleSpot2 = parkingSpots.getFreeSpot(anotherVehicle);
 
         assertNotNull(vehicleSpot1.vehicle);
         assertNull(vehicleSpot2);
@@ -48,7 +49,7 @@ class ParkingSpotsTest {
         parkingSpots.add(VehicleType.CAR, 1);
         Vehicle vehicle = getBike();
 
-        VehicleSpot vehicleSpot = parkingSpots.allot(vehicle);
+        VehicleSpot vehicleSpot = parkingSpots.getFreeSpot(vehicle);
 
         assertNull(vehicleSpot);
     }
