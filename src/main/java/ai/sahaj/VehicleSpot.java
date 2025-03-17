@@ -21,4 +21,8 @@ public class VehicleSpot {
     public VehicleType vehicleType() {
         return this.vehicleType;
     }
+
+    public void unpark() {
+        this.vehicle = null;
+    }
 }

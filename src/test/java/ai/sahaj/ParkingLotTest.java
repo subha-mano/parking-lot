@@ -65,6 +65,35 @@ class ParkingLotTest {
     }
 
     @Test
+    void shouldGetReceiptWhenAVehicleIsUnParked() {
+        Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
+        Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
+        mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
+
+        ParkingLot parkingLot = new ParkingLot(2, 0);
+        Vehicle vehicle = getBike();
+
+        ParkingTicket parkingTicket = parkingLot.park(vehicle);
+        Receipt receipt = parkingLot.unpark(parkingTicket);
+
+        assertEquals(0.0, receipt.fees);
+        assertEquals(startInstant, receipt.entryTime);
+        assertEquals(endInstant, receipt.exitTime);
+    }
+
+    @Test
+    void shouldAllowAnotherVehicleToParkWhenAVehicleIsUnParked() {
+        ParkingLot parkingLot = new ParkingLot(1, 0);
+        Vehicle vehicle = getBike();
+
+        ParkingTicket parkingTicket1 = parkingLot.park(vehicle);
+        parkingLot.unpark(parkingTicket1);
+        ParkingTicket parkingTicket2 = parkingLot.park(vehicle);
+
+        assertNotNull(parkingTicket2);
+    }
+
+    @Test
     void shouldLinkSpotOfSameTypeToAVehicleToPark() {
         ParkingLot parkingLot = new ParkingLot(2, 0);
         Vehicle vehicle = getBike();
@@ -98,7 +127,7 @@ class ParkingLotTest {
     }
 
     @Test
-    void shoulAssignSpotsForDifferentTypes() {
+    void shouldAssignSpotsForDifferentTypes() {
         ParkingLot parkingLot = new ParkingLot(1, 2);
         Vehicle car = getCar();
         Vehicle bike = getBike();

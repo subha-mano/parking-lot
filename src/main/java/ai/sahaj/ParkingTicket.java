@@ -22,4 +22,8 @@ public class ParkingTicket {
     public VehicleType vehicleType() {
         return this.vehicleSpot.vehicleType();
     }
+
+    public VehicleSpot vehicleSpot() {
+        return this.vehicleSpot;
+    }
 }

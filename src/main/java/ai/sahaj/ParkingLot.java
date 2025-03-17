@@ -15,4 +15,9 @@ public class ParkingLot {
         vehicleSpot.park(vehicle);
         return new ParkingTicket(vehicleSpot);
     }
+
+    public Receipt unpark(ParkingTicket parkingTicket) {
+        parkingTicket.vehicleSpot().unpark();
+        return new Receipt(parkingTicket);
+    }
 }
