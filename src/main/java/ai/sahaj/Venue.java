@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class ParkingSpots {
+public class Venue {
     private final List<VehicleSpot> vehicleSpots;
 
-    public ParkingSpots() {
+    public Venue() {
         this.vehicleSpots = new ArrayList<>();
     }
 

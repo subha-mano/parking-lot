@@ -2,6 +2,7 @@ package ai.sahaj;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
@@ -65,35 +66,6 @@ class ParkingLotTest {
     }
 
     @Test
-    void shouldGetReceiptWhenAVehicleIsUnParked() {
-        Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
-        Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
-        mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
-
-        ParkingLot parkingLot = new ParkingLot(2, 0);
-        Vehicle vehicle = getBike();
-
-        ParkingTicket parkingTicket = parkingLot.park(vehicle);
-        Receipt receipt = parkingLot.unpark(parkingTicket);
-
-        assertEquals(0.0, receipt.fees);
-        assertEquals(startInstant, receipt.entryTime);
-        assertEquals(endInstant, receipt.exitTime);
-    }
-
-    @Test
-    void shouldAllowAnotherVehicleToParkWhenAVehicleIsUnParked() {
-        ParkingLot parkingLot = new ParkingLot(1, 0);
-        Vehicle vehicle = getBike();
-
-        ParkingTicket parkingTicket1 = parkingLot.park(vehicle);
-        parkingLot.unpark(parkingTicket1);
-        ParkingTicket parkingTicket2 = parkingLot.park(vehicle);
-
-        assertNotNull(parkingTicket2);
-    }
-
-    @Test
     void shouldLinkSpotOfSameTypeToAVehicleToPark() {
         ParkingLot parkingLot = new ParkingLot(2, 0);
         Vehicle vehicle = getBike();
@@ -137,5 +109,49 @@ class ParkingLotTest {
 
         assertNotNull(parkingTicketForCar);
         assertNotNull(parkingTicketForBike);
+    }
+    @Test
+    void shouldGetReceiptWhenAVehicleIsUnParked() {
+        Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
+        Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
+        mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
+
+        ParkingLot parkingLot = new ParkingLot(2, 0);
+        Vehicle vehicle = getBike();
+
+        ParkingTicket parkingTicket = parkingLot.park(vehicle);
+        Receipt receipt = parkingLot.unpark(parkingTicket);
+
+        assertNotNull(receipt.fees);
+        assertEquals(startInstant, receipt.entryTime);
+        assertEquals(endInstant, receipt.exitTime);
+    }
+    @Test
+    void shouldAllowAnotherVehicleToParkWhenAVehicleIsUnParked() {
+        ParkingLot parkingLot = new ParkingLot(1, 0);
+        Vehicle vehicle = getBike();
+
+        ParkingTicket parkingTicket1 = parkingLot.park(vehicle);
+        parkingLot.unpark(parkingTicket1);
+        ParkingTicket parkingTicket2 = parkingLot.park(vehicle);
+
+        assertNotNull(parkingTicket2);
+    }
+    @Nested
+    class MallFeesModel {
+        @Test
+        void shouldCalculatePerHourFlatFeesForBike() {
+            Instant startInstant = Instant.parse("2020-01-01T10:10:10Z");
+            Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
+            mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
+
+            ParkingLot parkingLot = new ParkingLot(2, 0);
+            Vehicle vehicle = getBike();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(20.0, receipt.fees);
+        }
     }
 }

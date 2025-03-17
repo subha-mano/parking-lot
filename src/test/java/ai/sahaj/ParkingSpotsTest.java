@@ -11,33 +11,33 @@ class ParkingSpotsTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfNoParkingSpots() {
-        ParkingSpots parkingSpots = new ParkingSpots();
+        Venue venue = new Venue();
         Vehicle vehicle = getBike();
 
-        assertNull(parkingSpots.getFreeSpot(vehicle));
+        assertNull(venue.getFreeSpot(vehicle));
     }
 
     @Test
     void shouldGetSpotForAVehicleToPark() {
-        ParkingSpots parkingSpots = new ParkingSpots();
-        parkingSpots.add(VehicleType.BIKE, 2);
+        Venue venue = new Venue();
+        venue.add(VehicleType.BIKE, 2);
         Vehicle vehicle = getBike();
 
-        VehicleSpot vehicleSpot = parkingSpots.getFreeSpot(vehicle);
+        VehicleSpot vehicleSpot = venue.getFreeSpot(vehicle);
 
         assertNotNull(vehicleSpot);
     }
 
     @Test
     void shouldNotGetSpotIfFull() {
-        ParkingSpots parkingSpots = new ParkingSpots();
-        parkingSpots.add(VehicleType.BIKE, 1);
+        Venue venue = new Venue();
+        venue.add(VehicleType.BIKE, 1);
         Vehicle vehicle = getBike();
         Vehicle anotherVehicle = getBike();
 
-        VehicleSpot vehicleSpot1 = parkingSpots.getFreeSpot(vehicle);
+        VehicleSpot vehicleSpot1 = venue.getFreeSpot(vehicle);
         vehicleSpot1.park(vehicle);
-        VehicleSpot vehicleSpot2 = parkingSpots.getFreeSpot(anotherVehicle);
+        VehicleSpot vehicleSpot2 = venue.getFreeSpot(anotherVehicle);
 
         assertNotNull(vehicleSpot1.vehicle);
         assertNull(vehicleSpot2);
@@ -45,11 +45,11 @@ class ParkingSpotsTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfSpotIsNotOfTheSameType() {
-        ParkingSpots parkingSpots = new ParkingSpots();
-        parkingSpots.add(VehicleType.CAR, 1);
+        Venue venue = new Venue();
+        venue.add(VehicleType.CAR, 1);
         Vehicle vehicle = getBike();
 
-        VehicleSpot vehicleSpot = parkingSpots.getFreeSpot(vehicle);
+        VehicleSpot vehicleSpot = venue.getFreeSpot(vehicle);
 
         assertNull(vehicleSpot);
     }
