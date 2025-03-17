@@ -164,7 +164,10 @@ class ParkingLotTest {
 
         @ParameterizedTest(name = "[{index}] {3}")
         @CsvSource({
-                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,40,exact_hours"
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,40,exact_hours",
+                "2020-01-01T08:10:10Z,2020-01-01T12:10:10Z,80,one_minute_more",
+                "2020-01-01T06:10:10Z,2020-01-01T11:09:10Z,100,one_minute_less",
+                "2020-01-01T06:10:10Z,2020-01-02T17:09:10Z,700,more_than_a_day"
         })
         void shouldCalculatePerHourFlatFeesForCar(String startTime, String endTime, double expectedFees, String desc) {
             Instant start = Instant.parse(startTime);
