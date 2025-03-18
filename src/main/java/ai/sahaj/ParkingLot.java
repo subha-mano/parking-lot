@@ -5,8 +5,8 @@ import ai.sahaj.feeModel.FeeModel;
 public class ParkingLot {
     private final Venue venue;
 
-    public ParkingLot(int noOfBikeSpots, int noOfCarSpots, int noOfBusSpots) {
-        this.venue = new Venue(new FeeModel());
+    public ParkingLot(int noOfBikeSpots, int noOfCarSpots, int noOfBusSpots, FeeModel feeModel) {
+        this.venue = new Venue(feeModel);
         venue.add(VehicleType.BIKE, noOfBikeSpots);
         venue.add(VehicleType.CAR, noOfCarSpots);
         venue.add(VehicleType.BUS, noOfBusSpots);

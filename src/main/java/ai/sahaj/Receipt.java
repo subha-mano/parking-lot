@@ -14,7 +14,7 @@ public class Receipt {
         this.entryTime = parkingTicket.startTime();
         this.exitTime = Instant.now();
         long minutes = Duration.between(this.entryTime, this.exitTime).toMinutes();
-        double hours = Math.ceil(minutes / 60.0);
-        this.fees = feeModel.fees(parkingTicket.vehicleType(), (long) hours);
+        int hours = (int) Math.ceil(minutes / 60.0);
+        this.fees = feeModel.fees(parkingTicket.vehicleType(), hours);
     }
 }

@@ -4,9 +4,9 @@ public enum VehicleType {
     BIKE(10),
     CAR(20),
     BUS(50);
-    public final long rate;
+    public final int rate;
 
-    VehicleType(long rate) {
+    VehicleType(int rate) {
         this.rate = rate;
     }
 }
