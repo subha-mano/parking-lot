@@ -1,6 +1,7 @@
 package ai.sahaj;
 
 import ai.sahaj.feeModel.FeeModel;
+import ai.sahaj.feeModel.FlatHourFeeModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -17,6 +18,7 @@ import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
     MockedStatic<Instant> mockedInstant;
+    FeeModel flatHourFeeModel = new FlatHourFeeModel();
 
     @BeforeEach
     void setup() {
@@ -42,7 +44,7 @@ class ParkingLotTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfNoParkingSpots() {
-        ParkingLot parkingLot = new ParkingLot(0, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(0, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         assertNull(parkingLot.park(vehicle));
@@ -50,7 +52,7 @@ class ParkingLotTest {
 
     @Test
     void shouldLinkSpotToAVehicleToPark() {
-        ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         ParkingTicket parkingTicket= parkingLot.park(vehicle);
@@ -64,7 +66,7 @@ class ParkingLotTest {
         Instant nowInstant = Instant.parse(mockTime);
         mockedInstant.when(Instant::now).thenReturn(nowInstant);
 
-        ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -74,7 +76,7 @@ class ParkingLotTest {
 
     @Test
     void shouldLinkSpotOfBikeTypeToAVehicleToPark() {
-        ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         ParkingTicket parkingTicket= parkingLot.park(vehicle);
@@ -84,7 +86,7 @@ class ParkingLotTest {
 
     @Test
     void shouldLinkSpotOfBusTypeToAVehicleToPark() {
-        ParkingLot parkingLot = new ParkingLot(2, 0, 2, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(2, 0, 2, flatHourFeeModel);
         Vehicle vehicle = getBus();
 
         ParkingTicket parkingTicket= parkingLot.park(vehicle);
@@ -94,7 +96,7 @@ class ParkingLotTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfFull() {
-        ParkingLot parkingLot = new ParkingLot(1, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(1, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
         Vehicle anotherVehicle = getBike();
 
@@ -107,7 +109,7 @@ class ParkingLotTest {
 
     @Test
     void shouldNotAssignSpotToAVehicleIfOfDifferentType() {
-        ParkingLot parkingLot = new ParkingLot(1, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(1, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getCar();
 
         ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -117,7 +119,7 @@ class ParkingLotTest {
 
     @Test
     void shouldNotAssignSpotToABusIfOfDifferentType() {
-        ParkingLot parkingLot = new ParkingLot(1, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(1, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBus();
 
         ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -127,7 +129,7 @@ class ParkingLotTest {
 
     @Test
     void shouldAssignSpotsForDifferentTypes() {
-        ParkingLot parkingLot = new ParkingLot(1, 2, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(1, 2, 0, flatHourFeeModel);
         Vehicle car = getCar();
         Vehicle bike = getBike();
 
@@ -144,7 +146,7 @@ class ParkingLotTest {
         Instant endInstant = Instant.parse("2020-01-01T12:10:10Z");
         mockedInstant.when(Instant::now).thenReturn(startInstant, endInstant);
 
-        ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -155,7 +157,7 @@ class ParkingLotTest {
     }
     @Test
     void shouldAllowAnotherVehicleToParkWhenAVehicleIsUnParked() {
-        ParkingLot parkingLot = new ParkingLot(1, 0, 0, new FeeModel());
+        ParkingLot parkingLot = new ParkingLot(1, 0, 0, flatHourFeeModel);
         Vehicle vehicle = getBike();
 
         ParkingTicket parkingTicket1 = parkingLot.park(vehicle);
@@ -166,7 +168,7 @@ class ParkingLotTest {
     }
 
     @Nested
-    class MallFlatFeeModelTest {
+    class MallFlatHourFeeModelTest {
         @ParameterizedTest(name = "[{index}] {3}")
         @CsvSource({
                 "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,20,exact_hours",
@@ -179,7 +181,7 @@ class ParkingLotTest {
             Instant end = Instant.parse(endTime);
             when(Instant.now()).thenReturn(start, end);
 
-            ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+            ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
             Vehicle vehicle = getBike();
 
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -200,7 +202,7 @@ class ParkingLotTest {
             Instant end = Instant.parse(endTime);
             when(Instant.now()).thenReturn(start, end);
 
-            ParkingLot parkingLot = new ParkingLot(0, 2, 0, new FeeModel());
+            ParkingLot parkingLot = new ParkingLot(0, 2, 0, flatHourFeeModel);
             Vehicle vehicle = getCar();
 
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -221,7 +223,7 @@ class ParkingLotTest {
             Instant end = Instant.parse(endTime);
             when(Instant.now()).thenReturn(start, end);
 
-            ParkingLot parkingLot = new ParkingLot(2, 2, 4, new FeeModel());
+            ParkingLot parkingLot = new ParkingLot(2, 2, 4, flatHourFeeModel);
             Vehicle vehicle = getBus();
 
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
@@ -245,7 +247,7 @@ class ParkingLotTest {
             Instant end = Instant.parse(endTime);
             when(Instant.now()).thenReturn(start, end);
 
-            ParkingLot parkingLot = new ParkingLot(2, 0, 0, new FeeModel());
+            ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
             Vehicle vehicle = getBike();
 
             ParkingTicket parkingTicket = parkingLot.park(vehicle);

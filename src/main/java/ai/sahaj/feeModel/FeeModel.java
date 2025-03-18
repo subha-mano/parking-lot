@@ -2,8 +2,7 @@ package ai.sahaj.feeModel;
 
 import ai.sahaj.VehicleType;
 
-public class FeeModel {
-    public int fees(VehicleType vehicleType, int hours) {
-        return hours * vehicleType.rate;
-    }
+public interface FeeModel {
+    int fees(VehicleType vehicleType, int hours);
 }
+
