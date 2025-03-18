@@ -1,7 +1,7 @@
 package ai.sahaj;
 
-import ai.sahaj.feeModel.FeeModel;
-import ai.sahaj.feeModel.FlatHourFeeModel;
+import ai.sahaj.fee_model.FeeModel;
+import ai.sahaj.fee_model.FlatHourFeeModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,7 +1,8 @@
 package ai.sahaj;
 
-import ai.sahaj.feeModel.FeeModel;
-import ai.sahaj.feeModel.FlatHourFeeModel;
+import ai.sahaj.fee_model.FeeModel;
+import ai.sahaj.fee_model.FlatHourFeeModel;
+import ai.sahaj.fee_model.StadiumFeeModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -237,18 +238,57 @@ class ParkingLotTest {
     class StadiumFeeModelTest {
         @ParameterizedTest(name = "[{index}] {3}")
         @CsvSource({
-                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,20,exact_hours",
-                "2020-01-01T08:10:10Z,2020-01-01T12:10:10Z,40,one_minute_more",
-                "2020-01-01T06:10:10Z,2020-01-01T11:09:10Z,50,one_minute_less",
-                "2020-01-01T06:10:10Z,2020-01-02T17:09:10Z,350,more_than_a_day"
+                "2020-01-01T10:10:10Z,2020-01-01T10:11:10Z,30,one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,30,exact_hours_two",
+                "2020-01-01T10:10:10Z,2020-01-01T13:20:10Z,30,three_hours_ten_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T14:09:10Z,30,three_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T14:10:10Z,30,exact_four_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T14:11:10Z,90,four_hours_one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T17:10:10Z,90,seven_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T22:09:10Z,90,eleven_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T22:10:10Z,90,twelve_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T22:11:10Z,190,twelve_hours_one_minute",
+                "2020-01-01T10:10:10Z,2020-01-02T01:10:10Z,390,fourteen_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-02T01:10:10Z,390,fifteen_hours",
         })
-        void shouldCalculatePerHourFlatFeesForBike(String startTime, String endTime, double expectedFees, String desc) {
+        void shouldCalculateFeesForBike(String startTime, String endTime, double expectedFees, String desc) {
             Instant start = Instant.parse(startTime);
             Instant end = Instant.parse(endTime);
             when(Instant.now()).thenReturn(start, end);
 
-            ParkingLot parkingLot = new ParkingLot(2, 0, 0, flatHourFeeModel);
+            StadiumFeeModel feeModel = new StadiumFeeModel();
+            ParkingLot parkingLot = new ParkingLot(2, 0, 0, feeModel);
             Vehicle vehicle = getBike();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(expectedFees, receipt.fees);
+        }
+
+        @ParameterizedTest(name = "[{index}] {3}")
+        @CsvSource({
+                "2020-01-01T10:10:10Z,2020-01-01T10:11:10Z,60,one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,60,exact_hours_two",
+                "2020-01-01T10:10:10Z,2020-01-01T13:20:10Z,60,three_hours_ten_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T14:09:10Z,60,three_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T14:10:10Z,60,exact_four_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T14:11:10Z,180,four_hours_one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T17:10:10Z,180,seven_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T22:09:10Z,180,eleven_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-01T22:10:10Z,180,twelve_hours",
+                "2020-01-01T10:10:10Z,2020-01-01T22:11:10Z,380,twelve_hours_one_minute",
+                "2020-01-01T10:10:10Z,2020-01-02T01:10:10Z,780,fourteen_hours_fifty_nine_minutes",
+                "2020-01-01T10:10:10Z,2020-01-02T01:10:10Z,780,fifteen_hours",
+        })
+        void shouldCalculateFeesForCar(String startTime, String endTime, double expectedFees, String desc) {
+            Instant start = Instant.parse(startTime);
+            Instant end = Instant.parse(endTime);
+            when(Instant.now()).thenReturn(start, end);
+
+            StadiumFeeModel feeModel = new StadiumFeeModel();
+            ParkingLot parkingLot = new ParkingLot(2, 2, 0, feeModel);
+            Vehicle vehicle = getCar();
 
             ParkingTicket parkingTicket = parkingLot.park(vehicle);
             Receipt receipt = parkingLot.unpark(parkingTicket);

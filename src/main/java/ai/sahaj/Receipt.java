@@ -1,6 +1,6 @@
 package ai.sahaj;
 
-import ai.sahaj.feeModel.FeeModel;
+import ai.sahaj.fee_model.FeeModel;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,7 +14,6 @@ public class Receipt {
         this.entryTime = parkingTicket.startTime();
         this.exitTime = Instant.now();
         long minutes = Duration.between(this.entryTime, this.exitTime).toMinutes();
-        int hours = (int) Math.ceil(minutes / 60.0);
-        this.fees = feeModel.fees(parkingTicket.vehicleType(), hours);
+        this.fees = feeModel.fees(parkingTicket.vehicleType(), minutes);
     }
 }

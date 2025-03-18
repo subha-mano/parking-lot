@@ -1,6 +1,6 @@
 package ai.sahaj;
 
-import ai.sahaj.feeModel.FeeModel;
+import ai.sahaj.fee_model.FeeModel;
 
 import java.util.ArrayList;
 import java.util.List;
