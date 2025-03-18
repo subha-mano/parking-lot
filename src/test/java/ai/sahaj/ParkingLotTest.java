@@ -1,5 +1,6 @@
 package ai.sahaj;
 
+import ai.sahaj.fee_model.AirportFeeModel;
 import ai.sahaj.fee_model.FeeModel;
 import ai.sahaj.fee_model.FlatHourFeeModel;
 import ai.sahaj.fee_model.StadiumFeeModel;
@@ -287,6 +288,62 @@ class ParkingLotTest {
             when(Instant.now()).thenReturn(start, end);
 
             StadiumFeeModel feeModel = new StadiumFeeModel();
+            ParkingLot parkingLot = new ParkingLot(2, 2, 0, feeModel);
+            Vehicle vehicle = getCar();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(expectedFees, receipt.fees);
+        }
+
+    }
+
+    @Nested
+    class AirportFeeModelTest {
+        @ParameterizedTest(name = "[{index}] {3}")
+        @CsvSource({
+                "2020-01-01T10:10:10Z,2020-01-01T10:11:10Z,0,one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T11:10:10Z,40,one_hour",
+                "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,40,two_hours",
+                "2020-01-01T10:00:10Z,2020-01-01T17:59:10Z,40,seven_hours_fifty_nine_minutes",
+                "2020-01-01T10:00:10Z,2020-01-01T18:00:10Z,60,eight_hours",
+                "2020-01-01T10:00:10Z,2020-01-01T22:00:10Z,60,twelve_hours",
+                "2020-01-01T10:00:10Z,2020-01-02T10:00:10Z,80,twenty_four_hours",
+                "2020-01-01T10:00:10Z,2020-01-02T10:01:10Z,160,twenty_four_hours_one_minute",
+                "2020-01-01T10:00:10Z,2020-01-02T22:00:10Z,160,thirty_six_hours",
+                "2020-01-01T10:00:10Z,2020-01-03T10:01:10Z,240,forty_eight_hours_one_minute",
+        })
+        void shouldCalculateFeesForBike(String startTime, String endTime, double expectedFees, String desc) {
+            Instant start = Instant.parse(startTime);
+            Instant end = Instant.parse(endTime);
+            when(Instant.now()).thenReturn(start, end);
+
+            AirportFeeModel feeModel = new AirportFeeModel();
+            ParkingLot parkingLot = new ParkingLot(2, 0, 0, feeModel);
+            Vehicle vehicle = getBike();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(expectedFees, receipt.fees);
+        }
+
+        @ParameterizedTest(name = "[{index}] {3}")
+        @CsvSource({
+                "2020-01-01T10:10:10Z,2020-01-01T10:11:10Z,60,one_minute",
+                "2020-01-01T10:10:10Z,2020-01-01T11:10:10Z,60,one_hour",
+                "2020-01-01T10:00:10Z,2020-01-01T21:59:10Z,60,eleven_hours_fifty_nine_minutes",
+                "2020-01-01T10:00:10Z,2020-01-01T22:00:10Z,80,twelve_hours",
+                "2020-01-01T10:00:10Z,2020-01-02T09:59:10Z,80,twenty_three_hours_fifty_nine_minutes",
+                "2020-01-01T10:00:10Z,2020-01-02T10:00:10Z,100,twenty_four_hours"
+        })
+        void shouldCalculateFeesForCar(String startTime, String endTime, double expectedFees, String desc) {
+            Instant start = Instant.parse(startTime);
+            Instant end = Instant.parse(endTime);
+            when(Instant.now()).thenReturn(start, end);
+
+            AirportFeeModel feeModel = new AirportFeeModel();
             ParkingLot parkingLot = new ParkingLot(2, 2, 0, feeModel);
             Vehicle vehicle = getCar();
 
