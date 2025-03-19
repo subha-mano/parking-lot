@@ -21,20 +21,7 @@ public class StadiumFeeModel implements FeeModel {
                 new Rule(new Interval(12, Integer.MAX_VALUE), new PerHourRate(200), CAR),
         };
 
-        return getFees(rules, hours, vehicleType);
+        return new RuleFeeAggregator().cumulative(rules, hours, vehicleType);
     }
 
-    private int getFees(Rule[] rules, float hours, VehicleType vehicleType) {
-        int fee = 0;
-        while (hours > 0) {
-            for (Rule rule : rules) {
-                if (rule.isMatch(hours, vehicleType)) {
-                    float inclusiveStart = rule.interval.inclusiveStart();
-                    fee += rule.fees((float) Math.ceil(hours - inclusiveStart));
-                    hours = (float) Math.max(0, inclusiveStart - 0.1);
-                }
-            }
-        }
-        return fee;
-    }
 }

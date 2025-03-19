@@ -5,8 +5,6 @@ import ai.sahaj.fee_model.rate.FlatRate;
 import ai.sahaj.fee_model.rate.PerDayRate;
 import ai.sahaj.utils.Interval;
 
-import java.util.Arrays;
-
 import static ai.sahaj.VehicleType.BIKE;
 import static ai.sahaj.VehicleType.CAR;
 
@@ -23,14 +21,6 @@ public class AirportFeeModel implements FeeModel {
             new Rule(new Interval(12, 24), new FlatRate(80), CAR ),
             new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(100), CAR)
         };
-
-        return fees(rules, hours, vehicleType);
-    }
-
-    private int fees(Rule[] rules, float hours, VehicleType vehicleType) {
-        return Arrays.stream(rules)
-                .filter(rule -> rule.isMatch(hours, vehicleType))
-                .findFirst().map(rule -> rule.fees(hours))
-                .orElse(0);
+        return new RuleFeeAggregator().exact(rules, hours, vehicleType);
     }
 }

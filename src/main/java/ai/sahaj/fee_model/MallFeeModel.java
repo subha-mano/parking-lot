@@ -16,15 +16,8 @@ public class MallFeeModel implements FeeModel {
             new Rule(new Interval(0, Integer.MAX_VALUE), new PerHourRate(20), CAR),
             new Rule(new Interval(0, Integer.MAX_VALUE), new PerHourRate(50), BUS)
         };
-        return fees(rules, hours, vehicleType);
-    }
+        return new RuleFeeAggregator().exact(rules, hours, vehicleType);
 
-    private int fees(Rule[] rules, float hours, VehicleType vehicleType) {
-        return Arrays.stream(rules)
-                .filter(rule -> rule.isMatch(hours, vehicleType))
-                .findFirst().map(rule -> rule.fees(hours))
-                .orElse(0);
     }
-
 }
 
