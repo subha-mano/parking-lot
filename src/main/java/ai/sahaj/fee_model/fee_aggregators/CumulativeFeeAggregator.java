@@ -1,18 +1,11 @@
-package ai.sahaj.fee_model;
+package ai.sahaj.fee_model.fee_aggregators;
 
 import ai.sahaj.VehicleType;
+import ai.sahaj.fee_model.Rule;
 
-import java.util.Arrays;
-
-public class RuleFeeAggregator {
-    int exact(Rule[] rules, float hours, VehicleType vehicleType) {
-        return Arrays.stream(rules)
-                .filter(rule -> rule.isMatch(hours, vehicleType))
-                .findFirst().map(rule -> rule.fees(hours))
-                .orElse(0);
-    }
-
-    int cumulative(Rule[] rules, float hours, VehicleType vehicleType) {
+public class CumulativeFeeAggregator implements FeeAggregator {
+    @Override
+    public int aggregate(Rule[] rules, float hours, VehicleType vehicleType) {
         int fee = 0;
         while (hours > 0) {
             for (Rule rule : rules) {
@@ -25,5 +18,4 @@ public class RuleFeeAggregator {
         }
         return fee;
     }
-
 }

@@ -1,6 +1,8 @@
 package ai.sahaj.fee_model;
 
 import ai.sahaj.VehicleType;
+import ai.sahaj.fee_model.fee_aggregators.CumulativeFeeAggregator;
+import ai.sahaj.fee_model.fee_aggregators.FeeAggregator;
 import ai.sahaj.fee_model.rate.FlatRate;
 import ai.sahaj.fee_model.rate.PerHourRate;
 import ai.sahaj.utils.Interval;
@@ -21,7 +23,7 @@ public class StadiumFeeModel implements FeeModel {
                 new Rule(new Interval(12, Integer.MAX_VALUE), new PerHourRate(200), CAR),
         };
 
-        return new RuleFeeAggregator().cumulative(rules, hours, vehicleType);
+        return new CumulativeFeeAggregator().aggregate(rules, hours, vehicleType);
     }
 
 }

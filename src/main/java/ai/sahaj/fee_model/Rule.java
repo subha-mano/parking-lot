@@ -5,7 +5,7 @@ import ai.sahaj.fee_model.rate.Rate;
 import ai.sahaj.utils.Interval;
 
 public class Rule {
-    Interval interval;
+    public Interval interval;
     Rate rate;
     VehicleType vehicleType;
 
@@ -15,11 +15,11 @@ public class Rule {
         this.vehicleType = vehicleType;
     }
 
-    boolean isMatch(float hours, VehicleType vehicleType) {
+    public boolean isMatch(float hours, VehicleType vehicleType) {
         return interval.includes(hours) && vehicleType == this.vehicleType;
     }
 
-    int fees(float hours){
+    public int fees(float hours){
         return rate.fees(hours);
     }
 }

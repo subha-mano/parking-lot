@@ -1,6 +1,7 @@
 package ai.sahaj.fee_model;
 
 import ai.sahaj.VehicleType;
+import ai.sahaj.fee_model.fee_aggregators.ExactFeeAggregator;
 import ai.sahaj.fee_model.rate.FlatRate;
 import ai.sahaj.fee_model.rate.PerDayRate;
 import ai.sahaj.utils.Interval;
@@ -21,6 +22,6 @@ public class AirportFeeModel implements FeeModel {
             new Rule(new Interval(12, 24), new FlatRate(80), CAR ),
             new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(100), CAR)
         };
-        return new RuleFeeAggregator().exact(rules, hours, vehicleType);
+        return new ExactFeeAggregator().aggregate(rules, hours, vehicleType);
     }
 }

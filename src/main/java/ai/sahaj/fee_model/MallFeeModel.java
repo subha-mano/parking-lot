@@ -1,10 +1,10 @@
 package ai.sahaj.fee_model;
 
 import ai.sahaj.VehicleType;
+import ai.sahaj.fee_model.fee_aggregators.ExactFeeAggregator;
+import ai.sahaj.fee_model.fee_aggregators.FeeAggregator;
 import ai.sahaj.fee_model.rate.PerHourRate;
 import ai.sahaj.utils.Interval;
-
-import java.util.Arrays;
 
 import static ai.sahaj.VehicleType.*;
 
@@ -16,8 +16,7 @@ public class MallFeeModel implements FeeModel {
             new Rule(new Interval(0, Integer.MAX_VALUE), new PerHourRate(20), CAR),
             new Rule(new Interval(0, Integer.MAX_VALUE), new PerHourRate(50), BUS)
         };
-        return new RuleFeeAggregator().exact(rules, hours, vehicleType);
-
+        return new ExactFeeAggregator().aggregate(rules, hours, vehicleType);
     }
 }
 
