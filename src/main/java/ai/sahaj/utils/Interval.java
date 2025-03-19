@@ -12,4 +12,8 @@ public class Interval {
     public boolean includes(double value) {
         return value >= inclusiveStart && value < exclusiveEnd;
     }
+
+    public float inclusiveStart() {
+        return inclusiveStart;
+    }
 }

@@ -1,7 +1,7 @@
 package ai.sahaj;
 
 import ai.sahaj.fee_model.FeeModel;
-import ai.sahaj.fee_model.FlatHourFeeModel;
+import ai.sahaj.fee_model.MallFeeModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ class ParkingSpotsTest {
     private static Vehicle getBike() {
         return new Vehicle(VehicleType.BIKE);
     }
-    FeeModel flatHourFeeModel = new FlatHourFeeModel();
+    FeeModel flatHourFeeModel = new MallFeeModel();
 
     @Test
     void shouldNotAssignSpotToAVehicleIfNoParkingSpots() {

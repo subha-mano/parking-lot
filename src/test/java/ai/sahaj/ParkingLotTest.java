@@ -2,7 +2,7 @@ package ai.sahaj;
 
 import ai.sahaj.fee_model.AirportFeeModel;
 import ai.sahaj.fee_model.FeeModel;
-import ai.sahaj.fee_model.FlatHourFeeModel;
+import ai.sahaj.fee_model.MallFeeModel;
 import ai.sahaj.fee_model.StadiumFeeModel;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 class ParkingLotTest {
     MockedStatic<Instant> mockedInstant;
-    FeeModel flatHourFeeModel = new FlatHourFeeModel();
+    FeeModel flatHourFeeModel = new MallFeeModel();
 
     @BeforeEach
     void setup() {
@@ -170,7 +170,7 @@ class ParkingLotTest {
     }
 
     @Nested
-    class MallFlatHourFeeModelTest {
+    class MallMallFeeModelTest {
         @ParameterizedTest(name = "[{index}] {3}")
         @CsvSource({
                 "2020-01-01T10:10:10Z,2020-01-01T12:10:10Z,20,exact_hours",
