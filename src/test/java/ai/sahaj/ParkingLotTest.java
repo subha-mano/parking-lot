@@ -353,5 +353,16 @@ class ParkingLotTest {
             assertEquals(expectedFees, receipt.fees);
         }
 
+        @Test
+        void shouldReturnZeroForOtherVehicleTypes() {
+            AirportFeeModel feeModel = new AirportFeeModel();
+            ParkingLot parkingLot = new ParkingLot(2, 2, 1, feeModel);
+            Vehicle vehicle = getBus();
+
+            ParkingTicket parkingTicket = parkingLot.park(vehicle);
+            Receipt receipt = parkingLot.unpark(parkingTicket);
+
+            assertEquals(0, receipt.fees);
+        }
     }
 }

@@ -7,33 +7,29 @@ import ai.sahaj.utils.Interval;
 
 import java.util.Arrays;
 
+import static ai.sahaj.VehicleType.BIKE;
+import static ai.sahaj.VehicleType.CAR;
+
 public class AirportFeeModel implements FeeModel {
     @Override
     public int fees(VehicleType vehicleType, long minutes) {
         float hours = (float) minutes / 60;
-        if (vehicleType == VehicleType.BIKE) {
-            Rule[] rules = new Rule[]{
-                new Rule(new Interval(0, 1), new FlatRate(0)),
-                new Rule(new Interval(1, 8), new FlatRate(40)),
-                new Rule(new Interval(8, 24), new FlatRate(60)),
-                new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(80))
-            };
+        Rule[] rules = new Rule[]{
+            new Rule(new Interval(0, 1), new FlatRate(0), BIKE),
+            new Rule(new Interval(1, 8), new FlatRate(40), BIKE),
+            new Rule(new Interval(8, 24), new FlatRate(60), BIKE),
+            new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(80), BIKE),
+            new Rule(new Interval(0, 12), new FlatRate(60), CAR),
+            new Rule(new Interval(12, 24), new FlatRate(80), CAR ),
+            new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(100), CAR)
+        };
 
-            return fees(rules, hours);
-        } else if (vehicleType == VehicleType.CAR) {
-            Rule[] rules = new Rule[]{
-                    new Rule(new Interval(0, 12), new FlatRate(60)),
-                    new Rule(new Interval(12, 24), new FlatRate(80)),
-                    new Rule(new Interval(24, Integer.MAX_VALUE), new PerDayRate(100))
-            };
-            return fees(rules, hours);
-        }
-        return 0;
+        return fees(rules, hours, vehicleType);
     }
 
-    private int fees(Rule[] rules, float hours) {
+    private int fees(Rule[] rules, float hours, VehicleType vehicleType) {
         return Arrays.stream(rules)
-                .filter(rule -> rule.isMatch(hours))
+                .filter(rule -> rule.isMatch(hours, vehicleType))
                 .findFirst().map(rule -> rule.fees(hours))
                 .orElse(0);
     }
